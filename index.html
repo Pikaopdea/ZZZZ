@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Una página romántica celebrando el amor de Dante y Joselo en Bolivia, con narración en audio.">
+<title>El Amor de Dante y Joselo 🌈</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(160deg, #ff9a9e, #fad0c4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card {
+        position: relative;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 25px;
+        padding: 40px;
+        max-width: 700px;
+        width: 90%;
+        text-align: center;
+        z-index: 10;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px);
+    }
+
+    h1 {
+        color: #e91e63;
+        font-size: 3em;
+        margin-bottom: 10px;
+    }
+
+    h2 {
+        color: #ff4081;
+        font-size: 1.5em;
+        margin-bottom: 30px;
+    }
+
+    p {
+        font-size: 1.2em;
+        color: #444;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+    .audio-controls {
+        margin: 20px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .progress-container {
+        width: 100%;
+        max-width: 400px;
+        margin-bottom: 10px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #ddd;
+        border-radius: 4px;
+        outline: none;
+        -webkit-appearance: none;
+        appearance: none;
+        cursor: pointer;
+    }
+
+    .progress-bar::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #ff4081;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .progress-bar::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #ff4081;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .time-display {
+        font-size: 0.9em;
+        color: #666;
+        margin-bottom: 10px;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+    }
+
+    button {
+        padding: 15px 30px;
+        font-size: 1.2em;
+        border: none;
+        border-radius: 50px;
+        background: linear-gradient(135deg, #ff4081, #ff80ab);
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin: 10px;
+    }
+
+    button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 25px rgba(0,0,0,0.3);
+    }
+
+    button:focus {
+        outline: 2px solid #ff4081;
+    }
+
+    .audio-btn {
+        padding: 10px 20px;
+        font-size: 1em;
+        margin: 0;
+    }
+
+    .photo {
+        max-width: 100%;
+        height: auto;
+        border-radius: 15px;
+        margin-top: 20px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        transition: transform 0.2s;
+    }
+
+    .photo:hover {
+        transform: scale(1.05);
+    }
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+
+    @media (max-width: 600px) {
+        .card {
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        h2 {
+            font-size: 1.2em;
+        }
+        p {
+            font-size: 1em;
+        }
+        button {
+            font-size: 1em;
+            padding: 12px 24px;
+        }
+        .audio-btn {
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+        .progress-container {
+            max-width: 300px;
+        }
+        .photo {
+            margin-top: 15px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div class="card">
+    <h1>Dante 💕 Joselo</h1>
+    <h2>Un amor épico y divertido en Bolivia</h2>
+
+    <p>
+        Dante y Joselo se conocieron en la <strong>Plaza de la Mascota en Bolivia</strong>. 
+        Joselo tropezó con su propio zapato mientras Dante le sonreía, ¡y así empezó todo!
+    </p>
+
+    <p>
+        Entre risas, miradas traviesas y charlas sobre quién comía más salteñas, 
+        se dieron cuenta de que sus corazones estaban haciendo un remix de amor. 
+        <strong>Se besaron bien rico</strong>, mientras un grupo de palomas observaba como jurando no juzgar.
+    </p>
+
+    <p>
+        Desde entonces, cada paseo por la plaza se convirtió en una aventura de risas, abrazos y chistes internos. 
+        Su amor es un arcoíris ambulante, lleno de alegría y comedia. 🌈
+    </p>
+
+    <div class="audio-controls">
+        <div class="progress-container">
+            <div class="time-display" id="timeDisplay">0:00 / 0:00</div>
+            <input type="range" class="progress-bar" id="progressBar" value="0" min="0" max="100" step="0.1">
+        </div>
+        <div class="button-group">
+            <button class="audio-btn" id="playPauseBtn" onclick="toggleAudio()" aria-label="Reproducir o pausar la narración de la historia">▶️ Reproducir</button>
+            <button class="audio-btn" onclick="resetAudio()" aria-label="Reiniciar la narración de la historia">🔄 Reiniciar</button>
+        </div>
+    </div>
+
+    <button onclick="celebrar()" aria-label="Celebrar el amor de Dante y Joselo">Celebrar su amor</button>
+
+    <img class="photo" src="danteyjose.png" alt="Foto romántica de Dante y Joselo juntos">
+</div>
+
+<audio id="audio" preload="metadata">
+    <source src="historia.wav" type="audio/wav">
+    Tu navegador no soporta el elemento de audio.
+</audio>
+
+<script>
+// Botón de celebración
+function celebrar() {
+    alert("¡Viva el amor eterno de Dante y Joselo! 🌈❤️");
+}
+
+// Control de audio
+const audio = document.getElementById('audio');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const progressBar = document.getElementById('progressBar');
+const timeDisplay = document.getElementById('timeDisplay');
+
+function toggleAudio() {
+    if (audio.paused) {
+        audio.play();
+        playPauseBtn.innerHTML = '⏸️ Pausar';
+    } else {
+        audio.pause();
+        playPauseBtn.innerHTML = '▶️ Reproducir';
+    }
+}
+
+function resetAudio() {
+    audio.currentTime = 0;
+    progressBar.value = 0;
+    updateTimeDisplay();
+    if (!audio.paused) {
+        audio.pause();
+        playPauseBtn.innerHTML = '▶️ Reproducir';
+    }
+}
+
+// Actualizar barra de progreso y tiempo
+function updateProgress() {
+    if (!isNaN(audio.duration)) {
+        progressBar.value = (audio.currentTime / audio.duration) * 100;
+        updateTimeDisplay();
+    }
+}
+
+function updateTimeDisplay() {
+    const current = formatTime(audio.currentTime);
+    const total = formatTime(audio.duration || 0);
+    timeDisplay.textContent = `${current} / ${total}`;
+}
+
+function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+// Manejar scrubbing (arrastrar la barra)
+progressBar.addEventListener('input', () => {
+    const seekTime = (progressBar.value / 100) * audio.duration;
+    audio.currentTime = seekTime;
+    updateTimeDisplay();
+});
+
+// Eventos del audio
+audio.addEventListener('timeupdate', updateProgress);
+audio.addEventListener('loadedmetadata', updateTimeDisplay);
+audio.addEventListener('ended', () => {
+    playPauseBtn.innerHTML = '▶️ Reproducir';
+    progressBar.value = 0;
+    updateTimeDisplay();
+});
+
+// Canvas animado de corazones flotantes
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let width = canvas.width = window.innerWidth;
+let height = canvas.height = window.innerHeight;
+
+class Heart {
+    constructor() {
+        this.reset();
+    }
+
+    reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 20 + 10;
+        this.speedY = Math.random() * 1 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.5; // Movimiento lateral leve
+        this.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+    }
+
+    update() {
+        this.y -= this.speedY;
+        this.x += this.speedX;
+        if (this.y + this.size < 0 || this.x < 0 || this.x > width) this.reset();
+    }
+
+    draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.bezierCurveTo(this.x, this.y - this.size / 2, this.x - this.size, this.y - this.size / 2, this.x - this.size, this.y);
+        ctx.bezierCurveTo(this.x - this.size, this.y + this.size / 2, this.x, this.y + this.size, this.x, this.y + this.size * 1.5);
+        ctx.bezierCurveTo(this.x, this.y + this.size, this.x + this.size, this.y + this.size / 2, this.x + this.size, this.y);
+        ctx.bezierCurveTo(this.x + this.size, this.y - this.size / 2, this.x, this.y - this.size / 2, this.x, this.y);
+        ctx.fill();
+    }
+}
+
+const hearts = [];
+for (let i = 0; i < 50; i++) hearts.push(new Heart());
+
+function animate() {
+    ctx.clearRect(0, 0, width, height);
+    hearts.forEach(h => {
+        h.update();
+        h.draw();
+    });
+    requestAnimationFrame(animate);
+}
+animate();
+
+window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>
